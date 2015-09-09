@@ -1,3 +1,6 @@
+#  CSVFilegen generates CSV file format of the results scrapped  every 3 minutes. Three different files are generated from the JSON  i.e. Alerts, Main routes and Sub Routes. CSV files are stored with following naming  pattern: Alerts are indicated
+#with  AL, Main routes file is indicated by RT and sub routes are indicated by SR
+
 import json
 import datetime
 

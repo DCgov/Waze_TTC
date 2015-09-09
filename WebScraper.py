@@ -21,10 +21,10 @@ if __name__ == '__main__':
 
         r = requests.get(link, auth=HTTPBasicAuth(user, pwd))
 
-        # remove Lines
+        # remove Lines showing the path of the route
         jsonTextNoLines = re.sub(r'("Line":\[|)\{"x":-\d+.\d+,"y":\d+.\d+\}(,|)(\],|)', '', r.text, flags=re.IGNORECASE)
 
-        # remove bboxes
+        # remove bboxes from JSON file
         jsonTextNoLines = re.sub(r'"bbox":\{"minY":\d+.\d+,"minX":-\d+.\d+,"maxY":\d+.\d+,"maxX":-\d+.\d+\}(,|)', '',
                                  jsonTextNoLines, flags=re.IGNORECASE)
 
