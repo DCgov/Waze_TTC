@@ -1,4 +1,6 @@
-__author__ = 'Kaiqun'
+# The program developed by Washington DC department of transportation and is used to collect traffic time details from Waze citizen connect web portal.
+# The program is shared for informational purpose only. Please understand that DDOT does not guarantee the accuracy and workability of the program.
+__author__ = 'DDOT'
 
 from requests.auth import HTTPBasicAuth
 import requests
