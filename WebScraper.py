@@ -11,7 +11,7 @@ from CSVFileGen import CSVFilesGenerator
 
 if __name__ == '__main__':
     while True:
-        with open('credentials', 'r') as crdts:
+        with open('credentials.csv', 'r') as crdts:
             oneline = crdts.readline()
             link = oneline.split(',')[0]
             user = oneline.split(',')[1]
