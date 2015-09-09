@@ -5,7 +5,6 @@ import requests
 import re
 import time
 import datetime
-from DataInsertion import insertor
 from CSVFileGen import CSVFilesGenerator
 
 
@@ -30,8 +29,6 @@ if __name__ == '__main__':
         # get current time stamp
         CurTime = datetime.datetime.now()
         CurTimeStr = CurTime.strftime('%Y-%m-%d %H:%M:%S')
-
-        insertor(CurTime, jsonTextNoLines)
 
         CSVFilesGenerator(CurTime, jsonTextNoLines, FileLocation)
 
