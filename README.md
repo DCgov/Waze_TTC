@@ -13,4 +13,4 @@ AL indicates alerts shown along the routes
 Credential file is the place, user has to put in the URL link, username and password for the program to read.
 
 ##Comments and Questions 
-Please let us know your feedback [here] (http://inganire.com/t/open-source-waze-citizens-connect-travel-time-page/17)
+Please let us know your feedback 
