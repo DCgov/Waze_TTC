@@ -1,0 +1,3 @@
+jsonlib==1.6.1
+requests==2.2.1
+requests-oauthlib==0.4.0
