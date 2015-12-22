@@ -7,7 +7,7 @@ import requests
 import re
 import time
 import datetime
-from CSVFileGen import CSVFilesGenerator
+from CSVFileGen import csv_files_generator
 
 
 if __name__ == '__main__':
@@ -22,18 +22,18 @@ if __name__ == '__main__':
         r = requests.get(link, auth=HTTPBasicAuth(user, pwd))
 
         # remove Lines showing the path of the route
-        jsonTextNoLines = re.sub(r'("Line":\[|)\{"x":-\d+.\d+,"y":\d+.\d+\}(,|)(\],|)', '', r.text, flags=re.IGNORECASE)
+        json_text_no_lines = re.sub(r'("Line":\[|)\{"x":-\d+.\d+,"y":\d+.\d+\}(,|)(\],|)', '', r.text, flags=re.IGNORECASE)
 
         # remove bboxes from JSON file
-        jsonTextNoLines = re.sub(r'"bbox":\{"minY":\d+.\d+,"minX":-\d+.\d+,"maxY":\d+.\d+,"maxX":-\d+.\d+\}(,|)', '',
-                                 jsonTextNoLines, flags=re.IGNORECASE)
+        json_text_no_lines = re.sub(r'"bbox":\{"minY":\d+.\d+,"minX":-\d+.\d+,"maxY":\d+.\d+,"maxX":-\d+.\d+\}(,|)', '',
+                                 json_text_no_lines, flags=re.IGNORECASE)
 
         # get current time stamp
-        CurTime = datetime.datetime.now()
-        CurTimeStr = CurTime.strftime('%Y-%m-%d %H:%M:%S')
+        current_time = datetime.datetime.now()
+        current_time_string = current_time.strftime('%Y-%m-%d %H:%M:%S')
 
-        CSVFilesGenerator(CurTime, jsonTextNoLines, FileLocation)
+        csv_files_generator(current_time, json_text_no_lines, FileLocation)
 
-        print CurTimeStr + ' Data Operated. '
+        print current_time_string + ' Data Operated. '
 
         time.sleep(3 * 60)

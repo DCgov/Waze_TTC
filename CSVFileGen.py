@@ -1,82 +1,66 @@
-#  CSVFilegen generates CSV file format of the results scrapped  every 3 minutes. Three different files are generated from the JSON  i.e. Alerts, Main routes and Sub Routes. CSV files are stored with following naming  pattern: Alerts are indicated
-#with  AL, Main routes file is indicated by RT and sub routes are indicated by SR
+# CSVFilegen generates CSV file format of the results scrapped  every 3 minutes. Three different files are generated from the JSON  i.e. Alerts, Main routes and Sub Routes. CSV files are stored with following naming  pattern: Alerts are indicated
+# with  AL, Main routes file is indicated by RT and sub routes are indicated by SR
 
 import json
 import datetime
 
-# jam level mapping:
-# level 0: Free flow
-# level 1: Light traffic
-# level 2: Moderate traffic
-# level 3: Heavy traffic
-# level 4: Bumper to bumper
 
-def MperS2MiperH(inputMperS):
-    return inputMperS * 2.23694
+def meter_per_second_2_mile_per_hour(input_meter_per_second):
+	return input_meter_per_second * 2.23694
 
 
-def CSVFilesGenerator(inputDT, inputStr, targetDir):
-    # get current time stamp
-    CurTimeStr = inputDT.strftime('%Y-%m-%d %H:%M:%S')
-    FileName = inputDT.strftime('%Y%m%d%H%M')
+def csv_files_generator(input_datetime, input_string, target_directory):
+	# get current time stamp
+	current_time_string = input_datetime.strftime('%Y-%m-%d %H:%M:%S')
+	file_name = input_datetime.strftime('%Y%m%d%H%M')
 
-    RealJson = json.loads(inputStr)
+	real_json = json.loads(input_string)
 
-    SRHeader = ['Route Name', 'Time Stamp', 'From Street', 'To Street', 'Length (meters)', 'Historical Travel Time (seconds)', 'Travel Time (seconds)', 'Historical Speed (mph)', 'Speed (mph)', 'Jam Level']
-    with open(targetDir + '\\' + 'SR_' + FileName + '.csv', 'a') as outputSubroutesFile:
-        outputSubroutesFile.write(','.join(SRHeader) + '\n')
+	sub_route_header = ['Route Name', 'Time Stamp', 'From Street', 'To Street', 'Length (meters)',
+	                    'Historical Travel Time (seconds)', 'Travel Time (seconds)', 'Historical Speed (mph)',
+	                    'Speed (mph)', 'Jam Level']
+	with open(target_directory + '\\' + 'SR_' + file_name + '.csv', 'a') as output_sub_routes_file:
+		output_sub_routes_file.write(','.join(sub_route_header) + '\n')
 
-    ALHeader = ['Id', 'Report Time', 'Reported By', 'Alert Type', 'SubType', 'Street Name', 'City', 'Latitude', 'Longitude']
-    with open(targetDir + '\\' + 'AL_' + FileName + '.csv', 'a') as outputAlertroutesFile:
-        outputAlertroutesFile.write(','.join(ALHeader) + '\n')
+	alert_header = ['Id', 'Report Time', 'Reported By', 'Alert Type', 'SubType', 'Street Name', 'City', 'Latitude',
+	                'Longitude']
+	with open(target_directory + '\\' + 'AL_' + file_name + '.csv', 'a') as output_alert_routes_file:
+		output_alert_routes_file.write(','.join(alert_header) + '\n')
 
-    RTHeader = ['Route Name', 'Time Stamp', 'Id', 'Length (meters)', 'Historical Travel Time (seconds)', 'Travel Time (seconds)', 'Historical Speed (mph)', 'Speed (mph)', 'Jam Level']
-    with open(targetDir + '\\' + 'RT_' + FileName + '.csv', 'a') as outputRoutesFile:
-        outputRoutesFile.write(','.join(RTHeader) + '\n')
+	route_header = ['Route Name', 'Time Stamp', 'Id', 'Length (meters)', 'Historical Travel Time (seconds)',
+	                'Travel Time (seconds)', 'Historical Speed (mph)', 'Speed (mph)', 'Jam Level']
+	with open(target_directory + '\\' + 'RT_' + file_name + '.csv', 'a') as output_routes_file:
+		output_routes_file.write(','.join(route_header) + '\n')
 
-    for route in RealJson['routes']:
-        outputList = []
-        outputList.append(route['name'].lower())
-        outputList.append(CurTimeStr)
-        outputList.append(str(route['id']))
-        outputList.append(str(route['length']))
-        outputList.append(str(route['historicTime']))
-        outputList.append(str(route['time']))
-        outputList.append(str(MperS2MiperH(route['length'] / route['historicTime'])))
-        outputList.append(str(MperS2MiperH(route['length'] / route['time'])))
-        outputList.append(str(route['jamLevel']))
-        try:
-            for subroute in route['subRoutes']:
-                subRouteList = []
-                subRouteList.append(route['name'].lower())
-                subRouteList.append(CurTimeStr)
-                subRouteList.append(subroute['fromName'].lower())
-                subRouteList.append(subroute['toName'].lower())
-                subRouteList.append(str(subroute['length']))
-                subRouteList.append(str(subroute['historicTime']))
-                subRouteList.append(str(subroute['time']))
-                subRouteList.append(str(MperS2MiperH(subroute['length'] / subroute['historicTime'])))
-                subRouteList.append(str(MperS2MiperH(subroute['length'] / subroute['time'])))
-                subRouteList.append(str(subroute['jamLevel']))
-                with open(targetDir + '\\' + 'SR_' + FileName + '.csv', 'a') as outputSubroutesFile:
-                    outputSubroutesFile.write(','.join(subRouteList) + '\n')
+	for route in real_json['routes']:
+		output_list = [route['name'].lower(), current_time_string, str(route['id']), str(route['length']),
+		               str(route['historicTime']), str(route['time']),
+		               str(meter_per_second_2_mile_per_hour(route['length'] / route['historicTime'])),
+		               str(meter_per_second_2_mile_per_hour(route['length'] / route['time'])), str(route['jamLevel'])]
+		try:
+			for subroute in route['subRoutes']:
+				sub_route_list = [route['name'].lower(), current_time_string, subroute['fromName'].lower(),
+				                  subroute['toName'].lower(), str(subroute['length']), str(subroute['historicTime']),
+				                  str(subroute['time']),
+				                  str(meter_per_second_2_mile_per_hour(subroute['length'] / subroute['historicTime'])),
+				                  str(meter_per_second_2_mile_per_hour(subroute['length'] / subroute['time'])),
+				                  str(subroute['jamLevel'])]
+				with open(target_directory + '\\' + 'SR_' + file_name + '.csv', 'a') as output_sub_routes_file:
+					output_sub_routes_file.write(','.join(sub_route_list) + '\n')
 
-                if 'leadAlert' in subroute:
-                    AlertList = []
-                    AlertList.append(subroute['leadAlert']['id'])
-                    AlertList.append(datetime.datetime.fromtimestamp(int(subroute['leadAlert']['reportTime'] / 1000)).strftime('%Y-%m-%d %H:%M:%S'))
-                    AlertList.append(subroute['leadAlert']['reportByNickname'])
-                    AlertList.append(subroute['leadAlert']['type'])
-                    AlertList.append(subroute['leadAlert']['subType'])
-                    AlertList.append(subroute['leadAlert']['street'].lower())
-                    AlertList.append(subroute['leadAlert']['city'].lower().replace(',', ' '))
-                    AlertList.append(subroute['leadAlert']['position'].split(' ')[0])
-                    AlertList.append(subroute['leadAlert']['position'].split(' ')[1])
+				if 'leadAlert' in subroute:
+					alert_list = [subroute['leadAlert']['id'], datetime.datetime.fromtimestamp(
+						int(subroute['leadAlert']['reportTime'] / 1000)).strftime('%Y-%m-%d %H:%M:%S'),
+					              subroute['leadAlert']['reportByNickname'], subroute['leadAlert']['type'],
+					              subroute['leadAlert']['subType'], subroute['leadAlert']['street'].lower(),
+					              subroute['leadAlert']['city'].lower().replace(',', ' '),
+					              subroute['leadAlert']['position'].split(' ')[0],
+					              subroute['leadAlert']['position'].split(' ')[1]]
 
-                    with open(targetDir + '\\' + 'AL_' + FileName + '.csv', 'a') as outputAlertroutesFile:
-                        outputAlertroutesFile.write(','.join(AlertList) + '\n')
+					with open(target_directory + '\\' + 'AL_' + file_name + '.csv', 'a') as output_alert_routes_file:
+						output_alert_routes_file.write(','.join(alert_list) + '\n')
 
-            with open(targetDir + '\\' + 'RT_' + FileName + '.csv', 'a') as outputRoutesFile:
-                outputRoutesFile.write(','.join(outputList) + '\n')
-        except KeyError, e:
-            print e.message + ' === ' + route['name'].lower() + ' -- ' + str(route['id'])
+			with open(target_directory + '\\' + 'RT_' + file_name + '.csv', 'a') as output_routes_file:
+				output_routes_file.write(','.join(output_list) + '\n')
+		except KeyError, e:
+			print e.message + ' === ' + route['name'].lower() + ' -- ' + str(route['id'])
